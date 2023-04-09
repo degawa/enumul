@@ -32,6 +32,14 @@ Add the following `use` statement to modules or procedures calling par-funnel.
 use :: enumul
 ```
 
+### Reference as a fpm project's dependency
+To use enumul in your fpm project, add the following to the fpm.toml.
+
+```TOML
+[dependencies]
+catechin = {git = "https://github.com/degawa/enumul.git"}
+```
+
 ### extends abstract data type to define a typed enumerator
 Extends the abstract data type, `enum_atype`, to define a typed enumerator and then declares enumerators as the parameters.
 For example,
