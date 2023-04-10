@@ -37,7 +37,7 @@ To use enumul in your fpm project, add the following to the fpm.toml.
 
 ```TOML
 [dependencies]
-catechin = {git = "https://github.com/degawa/enumul.git"}
+enumul = {git = "https://github.com/degawa/enumul.git"}
 ```
 
 ### extends abstract data type to define a typed enumerator
