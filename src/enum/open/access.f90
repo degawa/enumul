@@ -7,16 +7,24 @@ module enumul_open_access
     public :: get_open_access_default_expr
 
     enum, bind(c)
-        enumerator :: Open_Access_Sequential = 1
+        enumerator :: Open_Access_Undefined = 0
+        enumerator :: Open_Access_Sequential
         enumerator :: Open_Access_Direct
         enumerator :: Open_Access_Stream
     end enum
 
-    character(*), parameter, private :: access(*) = ["SEQUENTIAL", &
-                                                     "DIRECT    ", &
-                                                     "STREAM    "]
+    character(*), parameter, private :: access(0:*) = ["UNDEFINED ", &
+                                                       "SEQUENTIAL", &
+                                                       "DIRECT    ", &
+                                                       "STREAM    "]
         !! The possible character expressions
         !! for the `access` specifier in the `open` statement.
+        !!
+        !!@note
+        !! `"UNDEFINED"` is not the possible character-expression
+        !! but the `inquire` statment assigns `"UNDEFINED"`
+        !! to the specified variable if there is no connection.
+        !!@endnote
 
     !>The enumerator for the `access` specifier
     !>and expression in the `open` statement.
@@ -28,6 +36,8 @@ module enumul_open_access
 
     !>The possible expressions for the `access` specifier
     type :: enum_open_access_list
+        type(enum_open_access), public :: undefined
+            !! The enumerator to represent the `UNDEFINED`
         type(enum_open_access), public :: sequential
             !! The enumerator to represent the `SEQUENTIAL`
         type(enum_open_access), public :: direct
@@ -39,6 +49,7 @@ module enumul_open_access
     type(enum_open_access_list), public, parameter :: &
         open_access = &
             enum_open_access_list( &
+                undefined  = enum_open_access(Open_Access_Undefined , access(Open_Access_Undefined)), &
                 sequential = enum_open_access(Open_Access_Sequential, access(Open_Access_Sequential)), &
                 direct     = enum_open_access(Open_Access_Direct    , access(Open_Access_Direct)), &
                 stream     = enum_open_access(Open_Access_Stream    , access(Open_Access_Stream)) &
