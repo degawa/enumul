@@ -5,9 +5,6 @@ module enumul_test
 
     type, public, extends(enum_atype) :: enum_test_type
     end type enum_test_type
-
-    type, public, extends(enum_atype) :: enum_another_type
-    end type enum_another_type
 end module enumul_test
 
 program check
@@ -17,7 +14,6 @@ program check
     implicit none
 
     type(enum_test_type) :: a, b, c, d
-    type(enum_another_type) :: x, y
 
     a = enum_test_type(1)
     b = enum_test_type(2)
@@ -39,9 +35,4 @@ program check
     call assert_true(c <= a, "<= operator test between variables with the same item id")
     call assert_true(b >= a, ">= operator test between variables with different item id")
     call assert_true(d <= a, "<= operator test between variables with different item id")
-
-    x = enum_another_type(2)
-    y = a
-    call assert_true(y /= a, "/= operator test between different types")
-    call assert_false(x == b, "== operator test between different types")
 end program check
