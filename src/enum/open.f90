@@ -1,6 +1,6 @@
 module enumul_open
     use :: enumul_open_access, &
-        only:enum_open_access, open_access, get_open_access_default_expr, optval
+        only:enum_open_access, open_access, default_open_access, get_open_access_default_expr, optval
     implicit none
     private
 

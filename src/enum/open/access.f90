@@ -46,7 +46,7 @@ module enumul_open_access
         !! The enumerators of possible expressions
         !! for the `access` specifier.
 
-    type(enum_open_access), private, parameter :: &
+    type(enum_open_access), public, parameter :: &
         default_open_access = open_access%sequential
         !! The default value of the `access` specifier.
         !! It is `"SEQUENTIAL"`.
