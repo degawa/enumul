@@ -1,8 +1,8 @@
 module enumul_open
     use :: enumul_open_access, &
-        only:enum_open_access, open_access, default_open_access, get_open_access_default_expr, optval
+        only:enum_open_access, open_access, default_open_access, get_open_access_default, optval
     use :: enumul_open_status, &
-        only:enum_open_status, open_status, default_open_status, get_open_status_default_expr, optval
+        only:enum_open_status, open_status, default_open_status, get_open_status_default, optval
     implicit none
     private
 
@@ -16,9 +16,9 @@ module enumul_open
 
     ! default values
     public :: default_open_access
-    public :: get_open_access_default_expr
+    public :: get_open_access_default
     public :: default_open_status
-    public :: get_open_status_default_expr
+    public :: get_open_status_default
 
     ! optval procedures
     public :: optval

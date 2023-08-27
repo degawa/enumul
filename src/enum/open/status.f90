@@ -4,7 +4,7 @@ module enumul_open_status
     implicit none
     private
     public :: optval
-    public :: get_open_status_default_expr
+    public :: get_open_status_default
 
     enum, bind(c)
         enumerator :: Open_Round_Old = 1
@@ -85,12 +85,12 @@ contains
     !>character-expression for the `status` specifier
     !>in the `open` statement.
     !>The default value is `"UNKNOWN"`.
-    function get_open_status_default_expr() result(default)
+    function get_open_status_default() result(default)
         implicit none
         type(enum_open_status) :: default
             !! The enumerator for default value of `status` specifier
             !! in `open`
 
         default = default_open_status
-    end function get_open_status_default_expr
+    end function get_open_status_default
 end module enumul_open_status

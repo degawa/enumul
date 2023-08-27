@@ -4,7 +4,7 @@ module enumul_open_access
     implicit none
     private
     public :: optval
-    public :: get_open_access_default_expr
+    public :: get_open_access_default
 
     enum, bind(c)
         enumerator :: Open_Access_Undefined = 0
@@ -86,12 +86,12 @@ contains
     !>character-expression for the `access` specifier
     !>in the `open` statement.
     !>The default value is `"SEQUENTIAL"`.
-    function get_open_access_default_expr() result(default)
+    function get_open_access_default() result(default)
         implicit none
         type(enum_open_access) :: default
             !! The enumerator for default value of `access` specifier
             !! in `open`
 
         default = default_open_access
-    end function get_open_access_default_expr
+    end function get_open_access_default
 end module enumul_open_access
