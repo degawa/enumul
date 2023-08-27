@@ -11,6 +11,7 @@ module enumul_open
     public :: open_access
 
     ! default values
+    public :: default_open_access
     public :: get_open_access_default_expr
 
     ! optval procedures
