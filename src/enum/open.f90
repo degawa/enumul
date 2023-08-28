@@ -13,6 +13,8 @@ module enumul_open
         only:enum_open_delim, open_delim, default_open_delim, get_open_delim_default, optval
     use :: enumul_open_encoding, &
         only:enum_open_encoding, open_encoding, default_open_encoding, get_open_encoding_default, optval
+    use :: enumul_open_form, &
+        only:enum_open_form, open_form, default_open_form, get_open_form_default, optval
     use :: enumul_open_status, &
         only:enum_open_status, open_status, default_open_status, get_open_status_default, optval
     implicit none
@@ -26,6 +28,7 @@ module enumul_open
     public :: enum_open_decimal
     public :: enum_open_delim
     public :: enum_open_encoding
+    public :: enum_open_form
     public :: enum_open_status
 
     ! enum lists
@@ -36,6 +39,7 @@ module enumul_open
     public :: open_decimal
     public :: open_delim
     public :: open_encoding
+    public :: open_form
     public :: open_status
 
     ! default values
@@ -46,6 +50,7 @@ module enumul_open
     public :: get_open_decimal_default, default_open_decimal
     public :: get_open_delim_default, default_open_delim
     public :: get_open_encoding_default, default_open_encoding
+    public :: get_open_form_default, default_open_form
     public :: get_open_status_default, default_open_status
 
     ! optval procedures
