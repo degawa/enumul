@@ -19,6 +19,8 @@ module enumul_open
         only:enum_open_pad, open_pad, default_open_pad, get_open_pad_default, optval
     use :: enumul_open_position, &
         only:enum_open_position, open_position, default_open_position, get_open_position_default, optval
+    use :: enumul_open_round, &
+        only:enum_open_round, open_round, get_open_round_default, optval
     use :: enumul_open_status, &
         only:enum_open_status, open_status, default_open_status, get_open_status_default, optval
     implicit none
@@ -35,6 +37,7 @@ module enumul_open
     public :: enum_open_form
     public :: enum_open_pad
     public :: enum_open_position
+    public :: enum_open_round
     public :: enum_open_status
 
     ! enum lists
@@ -48,6 +51,7 @@ module enumul_open
     public :: open_form
     public :: open_pad
     public :: open_position
+    public :: open_round
     public :: open_status
 
     ! default values
@@ -61,6 +65,7 @@ module enumul_open
     public :: get_open_form_default, default_open_form
     public :: get_open_pad_default, default_open_pad
     public :: get_open_position_default, default_open_position
+    public :: get_open_round_default
     public :: get_open_status_default, default_open_status
 
     ! optval procedures
