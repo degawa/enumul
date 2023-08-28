@@ -7,6 +7,8 @@ module enumul_open
         only:enum_open_asynchronous, open_asynchronous, default_open_asynchronous, get_open_asynchronous_default, optval
     use :: enumul_open_blank, &
         only:enum_open_blank, open_blank, default_open_blank, get_open_blank_default, optval
+    use :: enumul_open_decimal, &
+        only:enum_open_decimal, open_decimal, default_open_decimal, get_open_decimal_default, optval
     use :: enumul_open_status, &
         only:enum_open_status, open_status, default_open_status, get_open_status_default, optval
     implicit none
@@ -17,6 +19,7 @@ module enumul_open
     public :: enum_open_action
     public :: enum_open_asynchronous
     public :: enum_open_blank
+    public :: enum_open_decimal
     public :: enum_open_status
 
     ! enum lists
@@ -24,6 +27,7 @@ module enumul_open
     public :: open_action
     public :: open_asynchronous
     public :: open_blank
+    public :: open_decimal
     public :: open_status
 
     ! default values
@@ -31,6 +35,7 @@ module enumul_open
     public :: get_open_action_default
     public :: get_open_asynchronous_default, default_open_asynchronous
     public :: get_open_blank_default, default_open_blank
+    public :: get_open_decimal_default, default_open_decimal
     public :: get_open_status_default, default_open_status
 
     ! optval procedures
