@@ -12,9 +12,9 @@ module enumul_open_asynchronous
         enumerator :: Open_Asynchronous_No
     end enum
 
-    character(*), parameter, private :: asynchronous(0:*) = ["UNDEFINED ", &
-                                                             "YES       ", &
-                                                             "NO        "]
+    character(*), parameter, private :: asynchronous(0:*) = ["UNDEFINED", &
+                                                             "YES      ", &
+                                                             "NO       "]
         !! The possible character expressions
         !! for the `asynchronous` specifier in the `open` statement.
         !!

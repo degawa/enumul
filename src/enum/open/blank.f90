@@ -12,9 +12,9 @@ module enumul_open_blank
         enumerator :: Open_Blank_Zero
     end enum
 
-    character(*), parameter, private :: blank(0:*) = ["UNDEFINED ", &
-                                                      "NULL      ", &
-                                                      "ZERO      "]
+    character(*), parameter, private :: blank(0:*) = ["UNDEFINED", &
+                                                      "NULL     ", &
+                                                      "ZERO     "]
         !! The possible character expressions
         !! for the `blank` specifier in the `open` statement.
         !!
