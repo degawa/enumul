@@ -23,13 +23,10 @@ module enumul_open
     public :: open_status
 
     ! default values
-    public :: default_open_access
-    public :: get_open_access_default
+    public :: get_open_access_default, default_open_access
     public :: get_open_action_default
-    public :: default_open_asynchronous
-    public :: get_open_asynchronous_default
-    public :: default_open_status
-    public :: get_open_status_default
+    public :: get_open_asynchronous_default, default_open_asynchronous
+    public :: get_open_status_default, default_open_status
 
     ! optval procedures
     public :: optval
