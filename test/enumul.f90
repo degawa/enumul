@@ -7,7 +7,7 @@ module enumul_test
     end type enum_test_type
 end module enumul_test
 
-program check
+program test_enumul
     use, intrinsic :: iso_fortran_env
     use :: enumul_test
     use :: fassert
@@ -35,4 +35,4 @@ program check
     call assert_true(c <= a, "<= operator test between variables with the same item id")
     call assert_true(b >= a, ">= operator test between variables with different item id")
     call assert_true(d <= a, "<= operator test between variables with different item id")
-end program check
+end program test_enumul
