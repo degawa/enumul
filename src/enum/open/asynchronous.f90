@@ -46,8 +46,8 @@ module enumul_open_asynchronous
         open_asynchronous = &
             enum_open_asynchronous_list( &
                 undefined = enum_open_asynchronous(Open_Asynchronous_Undefined, asynchronous(Open_Asynchronous_Undefined)), &
-                yes       = enum_open_asynchronous(Open_Asynchronous_Yes, asynchronous(Open_Asynchronous_Yes)), &
-                no        = enum_open_asynchronous(Open_Asynchronous_No , asynchronous(Open_Asynchronous_No)) &
+                yes       = enum_open_asynchronous(Open_Asynchronous_Yes      , asynchronous(Open_Asynchronous_Yes)), &
+                no        = enum_open_asynchronous(Open_Asynchronous_No       , asynchronous(Open_Asynchronous_No)) &
             ) !&
         !! The enumerators of possible expressions
         !! for the `asynchronous` specifier.
