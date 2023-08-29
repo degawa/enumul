@@ -23,23 +23,23 @@ contains
         logical :: stat
         character(:), allocatable :: msg
 
-        call expect_true(open_access%sequential%expr == "SEQUENTIAL", &
-                         "character expression of sequential should be 'SEQUENTIAL'", stat=stat, output_message=msg)
+        call expect_equal(trim(open_access%sequential%expr), "SEQUENTIAL", &
+                          "character expression of sequential should be 'SEQUENTIAL'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(open_access%direct%expr == "DIRECT", &
-                         "character expression of direct should be 'DIRECT'", stat=stat, output_message=msg)
+        call expect_equal(trim(open_access%direct%expr), "DIRECT", &
+                          "character expression of direct should be 'DIRECT'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(open_access%stream%expr == "STREAM", &
-                         "character expression of stream should be 'STREAM'", stat=stat, output_message=msg)
+        call expect_equal(trim(open_access%stream%expr), "STREAM", &
+                          "character expression of stream should be 'STREAM'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(open_access%undefined%expr == "UNDEFINED", &
-                         "character expression of undefined should be 'UNDEFINED'", stat=stat, output_message=msg)
+        call expect_equal(trim(open_access%undefined%expr), "UNDEFINED", &
+                          "character expression of undefined should be 'UNDEFINED'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine enum_open_access_list_has_char_expr_specified_in_standard
@@ -60,8 +60,8 @@ contains
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(access%expr == open_access%sequential%expr, &
-                         "assigned enum should have the same char-expr of the rhs", stat=stat, output_message=msg)
+        call expect_equal(trim(access%expr), trim(open_access%sequential%expr), &
+                          "assigned enum should have the same char-expr of the rhs", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine assignment_op_for_enum_open_access_assigns_enum_and_char_expr
@@ -81,9 +81,9 @@ contains
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(default_open_access%expr == open_access%sequential%expr, &
-                         "character expression of the default access specifier should equal to that of the sequential", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(default_open_access%expr), trim(open_access%sequential%expr), &
+                          "character expression of the default access specifier should equal to that of the sequential", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
@@ -95,7 +95,7 @@ contains
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(default%expr == default_open_access%expr, &
+        call expect_equal(trim(default%expr), trim(default_open_access%expr), &
                          "character expression of return value of `get_open_access_default` &
                          &should equal to that of `default_open_access`", &
                          stat=stat, output_message=msg)
@@ -117,9 +117,9 @@ contains
         inquire (unit, access=access)
         close (unit)
 
-        call expect_true(access == default_open_access%expr, &
-                         "`inquire` returns the default character expression when open an unit without access specifier", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(access), trim(default_open_access%expr), &
+                          "`inquire` returns the default character expression when open an unit without access specifier", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine inquire_returns_default_char_expr_when_open_unit_wo_access_spec
@@ -136,9 +136,9 @@ contains
         unit = -huge(unit)
         inquire (unit, access=access)
 
-        call expect_true(access == open_access%undefined%expr, &
-                         "`inquire` returns 'UNDEFINED' when there is no connection", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(access), trim(open_access%undefined%expr), &
+                          "`inquire` returns 'UNDEFINED' when there is no connection", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine inquire_returns_undefined_when_there_is_no_connection
@@ -162,9 +162,9 @@ contains
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(y%expr == x%expr, &
-                         "character expression of y should equal to that of x", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(y%expr), trim(x%expr), &
+                          "character expression of y should equal to that of x", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine optval_returns_x_when_x_is_presented
@@ -187,9 +187,9 @@ contains
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_true(y%expr == default_open_access%expr, &
-                         "character expression of y should equal to that of default", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(y%expr), trim(default_open_access%expr), &
+                          "character expression of y should equal to that of default", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine optval_returns_default_when_x_is_not_presented
