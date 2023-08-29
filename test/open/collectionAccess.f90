@@ -23,7 +23,7 @@ contains
                                     &when open an unit without the access specifier", &
                                     inquire_returns_default_char_expr_when_open_unit_wo_access_spec) &
                      , new_unittest("inquire() should return 'UNDEFINED' when there is no connection", &
-                                    inqure_returns_undefined_when_there_is_no_connection) &
+                                    inquire_returns_undefined_when_there_is_no_connection) &
                      , new_unittest("optval() should return x when x is presented", &
                                     optval_returns_x_when_x_is_presented) &
                      , new_unittest("optval() should return default when x is not presented", &
