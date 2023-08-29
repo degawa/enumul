@@ -13,3 +13,4 @@ library = false
 
 [dev-dependencies]
 fassert = {git = "https://github.com/degawa/fassert.git"}
+newunit = {git = "https://github.com/degawa/newunit.git"}

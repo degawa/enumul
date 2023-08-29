@@ -120,6 +120,7 @@ contains
     end subroutine inquire_returns_default_char_expr_when_open_unit_wo_action_spec
 
     subroutine inquire_returns_undefined_when_there_is_no_connection(error)
+        use :: newunit
         implicit none
         type(error_type), allocatable, intent(out) :: error
             !! error handler
@@ -128,7 +129,8 @@ contains
         character(:), allocatable :: msg
         character(32) :: action
         integer(int32) :: unit
-        unit = -huge(unit)
+
+        unit = get_newunit_number()
         inquire (unit, action=action)
 
         call expect_equal(trim(action), trim(open_action%undefined%expr), &
