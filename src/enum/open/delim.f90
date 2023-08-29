@@ -38,9 +38,9 @@ module enumul_open_delim
     type :: enum_open_delim_list
         type(enum_open_delim), public :: undefined
             !! The enumerator to represent the `UNDEFINED`
-        type(enum_open_delim), public :: apostrohe
+        type(enum_open_delim), public :: apostrophe
             !! The enumerator to represent the `APOSTROPHE`
-        type(enum_open_delim), public :: quate
+        type(enum_open_delim), public :: quote
             !! The enumerator to represent the `QUOTE`
         type(enum_open_delim), public :: none
             !! The enumerator to represent the `NONE`
@@ -49,10 +49,10 @@ module enumul_open_delim
     type(enum_open_delim_list), public, parameter :: &
         open_delim = &
             enum_open_delim_list( &
-                undefined = enum_open_delim(Open_Delim_Undefined , delim(Open_Delim_Undefined)), &
-                apostrohe = enum_open_delim(Open_Delim_Apostrophe, delim(Open_Delim_Apostrophe)), &
-                quate     = enum_open_delim(Open_Delim_Quote, delim(Open_Delim_Quote)), &
-                none      = enum_open_delim(Open_Delim_None, delim(Open_Delim_None)) &
+                undefined  = enum_open_delim(Open_Delim_Undefined , delim(Open_Delim_Undefined)), &
+                apostrophe = enum_open_delim(Open_Delim_Apostrophe, delim(Open_Delim_Apostrophe)), &
+                quote      = enum_open_delim(Open_Delim_Quote, delim(Open_Delim_Quote)), &
+                none       = enum_open_delim(Open_Delim_None, delim(Open_Delim_None)) &
             ) !&
         !! The enumerators of possible expressions
         !! for the `delim` specifier.
