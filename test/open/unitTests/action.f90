@@ -9,7 +9,7 @@ module test_open_unitTests_action
     public :: enum_open_action_list_has_char_expr_specified_in_standard
     public :: assignment_op_for_enum_open_action_assigns_enum_and_char_expr
     public :: open_action_default_returns_one_of_enum_defined_in_std
-    public :: inquire_returns_char_expr_when_open_unit_wo_action_spec
+    public :: inquire_returns_default_char_expr_when_open_unit_wo_action_spec
     public :: inqure_returns_undefined_when_there_is_no_connection
     public :: optval_returns_x_when_x_is_presented
     public :: optval_returns_default_when_x_is_not_presented
@@ -96,7 +96,7 @@ contains
         if (occurred(error)) return
     end subroutine open_action_default_returns_one_of_enum_defined_in_std
 
-    subroutine inquire_returns_char_expr_when_open_unit_wo_action_spec(error)
+    subroutine inquire_returns_default_char_expr_when_open_unit_wo_action_spec(error)
         implicit none
         type(error_type), allocatable, intent(out) :: error
             !! error handler
@@ -117,7 +117,7 @@ contains
                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
-    end subroutine inquire_returns_char_expr_when_open_unit_wo_action_spec
+    end subroutine inquire_returns_default_char_expr_when_open_unit_wo_action_spec
 
     subroutine inqure_returns_undefined_when_there_is_no_connection(error)
         implicit none
