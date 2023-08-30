@@ -22,7 +22,7 @@ module enumul_open_action
         !!
         !!@note
         !! `"UNDEFINED"` is not the possible character-expression
-        !! but the `inquire` statment assigns `"UNDEFINED"`
+        !! but the `inquire` statement assigns `"UNDEFINED"`
         !! to the specified variable if there is no connection.
         !!@endnote
 

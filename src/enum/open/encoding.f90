@@ -26,7 +26,7 @@ module enumul_open_encoding
         !! But the `inquire` statment assigns `"UNDEFINED"`
         !! to the specified variable if the connection for
         !! formatted I/O with an encoding form of UTF-8.
-        !! The `inquire` statment assigns `"UNKNOWN"`
+        !! The `inquire` statement assigns `"UNKNOWN"`
         !! to the specified variable if the processor is unable to
         !! determine the encoding form of the file or
         !! the unit is not conneted to a file.
