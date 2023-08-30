@@ -11,6 +11,11 @@ auto-examples = true
 [install]
 library = false
 
+[preprocess]
+[preprocess.cpp]
+
 [dev-dependencies]
 fassert = {git = "https://github.com/degawa/fassert.git"}
+test-drive = {git = "https://github.com/fortran-lang/test-drive"}
+testdrive_util = {git = "https://github.com/degawa/testdrive_util"}
 newunit = {git = "https://github.com/degawa/newunit.git"}
