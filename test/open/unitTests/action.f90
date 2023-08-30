@@ -97,6 +97,7 @@ contains
     end subroutine open_action_default_returns_one_of_enum_defined_in_std
 
     subroutine inquire_returns_default_char_expr_when_open_unit_wo_action_spec(error)
+        use :: enumul_open_status
         implicit none
         type(error_type), allocatable, intent(out) :: error
             !! error handler
@@ -107,7 +108,7 @@ contains
         integer(int32) :: unit
         type(enum_open_action) :: default
 
-        open (newunit=unit, status="scratch")
+        open (newunit=unit, status=open_status%scratch%expr)
         inquire (unit, action=action)
         close (unit)
 

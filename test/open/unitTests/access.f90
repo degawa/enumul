@@ -104,6 +104,7 @@ contains
     end subroutine default_open_access_enum_is_sequential
 
     subroutine inquire_returns_default_char_expr_when_open_unit_wo_access_spec(error)
+        use :: enumul_open_status
         implicit none
         type(error_type), allocatable, intent(out) :: error
             !! error handler
@@ -113,7 +114,7 @@ contains
         character(32) :: access
         integer(int32) :: unit
 
-        open (newunit=unit, status="scratch")
+        open (newunit=unit, status=open_status%scratch%expr)
         inquire (unit, access=access)
         close (unit)
 
