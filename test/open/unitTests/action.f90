@@ -23,22 +23,22 @@ contains
         logical :: stat
         character(:), allocatable :: msg
 
-        call expect_equal(trim(open_action%read%expr), trim("READ"), &
+        call expect_equal(trim(open_action%read%expr), "READ", &
                           "character expression of read should be 'READ'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(open_action%write%expr), trim("WRITE"), &
+        call expect_equal(trim(open_action%write%expr), "WRITE", &
                           "character expression of write should be 'WRITE'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(open_action%readwrite%expr), trim("READWRITE"), &
+        call expect_equal(trim(open_action%readwrite%expr), "READWRITE", &
                           "character expression of readwrite should be 'READWRITE'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(open_action%undefined%expr), trim("UNDEFINED"), &
+        call expect_equal(trim(open_action%undefined%expr), "UNDEFINED", &
                           "character expression of undefined should be 'UNDEFINED'", stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
