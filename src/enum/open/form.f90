@@ -52,11 +52,6 @@ module enumul_open_form
         !! The enumerators of possible expressions
         !! for the `form` specifier.
 
-    type(enum_open_form), public, parameter :: &
-        default_open_form = open_form%formatted
-        !! The default value of the `form` specifier.
-        !! It is `"FORMATTED"`.
-
     interface optval
         procedure :: optval_open_form
     end interface
@@ -80,13 +75,31 @@ contains
     !>Returns the enumerator representing the default
     !>character-expression for the `form` specifier
     !>in the `open` statement.
-    !>The default value is `"FORMATTED"`.
-    function get_open_form_default() result(default)
+    !>
+    !>The default value is `"UNFORMATTED"` if the file is
+    !>being connected for direct or stream access,
+    !>and is `"FORMATTED"` for sequential access.
+    function get_open_form_default(access) result(default)
+        use :: enumul_open_access
         implicit none
+        type(enum_open_access), intent(in), optional :: access
+            !! ACCESS specifier specifing the access method
         type(enum_open_form) :: default
             !! The enumerator for default value of `form` specifier
             !! in `open`
 
-        default = default_open_form
+        type(enum_open_access) :: access_
+        access_ = optval(access, default_open_access)
+
+        select case (access_%expr)
+        case (open_access%direct%expr, open_access%stream%expr)
+            default = open_form%unformatted
+
+        case (open_access%sequential%expr)
+            default = open_form%formatted
+
+        case default
+            default = open_form%undefined
+        end select
     end function get_open_form_default
 end module enumul_open_form
