@@ -7,29 +7,32 @@ module enumul_open_encoding
     public :: get_open_encoding_default
 
     enum, bind(c)
-        enumerator :: Open_Encoding_UNKNOWN = -1
-        enumerator :: Open_Encoding_UNDEFINED
+        enumerator :: Open_Encoding_Default = 0
         enumerator :: Open_Encoding_UTF8
-        enumerator :: Open_Encoding_Default
+        enumerator :: Open_Encoding_UNKNOWN
+        enumerator :: Open_Encoding_UNDEFINED
     end enum
 
-    character(*), parameter, private :: encoding(-1:*) = ["UNKNOWN  ", &
-                                                          "UNDEFINED", &
-                                                          "UTF-8    ", &
-                                                          "DEFAULT  "]
+    character(*), parameter, private :: encoding(0:*) = ["DEFAULT  ", &
+                                                         "UTF-8    ", &
+                                                         "UNKNOWN  ", &
+                                                         "UNDEFINED"]
         !! The possible character expressions
         !! for the `encoding` specifier in the `open` statement.
         !!
         !!@note
         !! `"UNDEFINED"` and `"UNKNOWN"` are not
         !! the possible character-expressions.
-        !! But the `inquire` statment assigns `"UNDEFINED"`
-        !! to the specified variable if the connection for
-        !! formatted I/O with an encoding form of UTF-8.
+        !! But the `inquire` statement assigns `"UNDEFINED"`
+        !! to the specified variable if the connection is for
+        !! unformatted I/O.
         !! The `inquire` statement assigns `"UNKNOWN"`
         !! to the specified variable if the processor is unable to
         !! determine the encoding form of the file or
         !! the unit is not conneted to a file.
+        !!
+        !! If there is no connection to a unit, the result of
+        !! the `inquire` is compiler-dependent.
         !!@endnote
 
     !>The enumerator for the `encoding` specifier
@@ -54,10 +57,10 @@ module enumul_open_encoding
     type(enum_open_encoding_list), public, parameter :: &
         open_encoding = &
             enum_open_encoding_list( &
-                unknown   = enum_open_encoding(Open_Encoding_UNKNOWN,   encoding(Open_Encoding_UNKNOWN)), &
-                undefined = enum_open_encoding(Open_Encoding_UNDEFINED, encoding(Open_Encoding_UNDEFINED)), &
+                default   = enum_open_encoding(Open_Encoding_Default,   encoding(Open_Encoding_Default)), &
                 utf8      = enum_open_encoding(Open_Encoding_UTF8,      encoding(Open_Encoding_UTF8)), &
-                default   = enum_open_encoding(Open_Encoding_Default,   encoding(Open_Encoding_Default)) &
+                unknown   = enum_open_encoding(Open_Encoding_UNKNOWN,   encoding(Open_Encoding_UNKNOWN)), &
+                undefined = enum_open_encoding(Open_Encoding_UNDEFINED, encoding(Open_Encoding_UNDEFINED)) &
             ) !&
         !! The enumerators of possible expressions
         !! for the `encoding` specifier.
