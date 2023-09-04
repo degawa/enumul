@@ -17,7 +17,7 @@ contains
                                   enum_open_access_list_has_char_expr_specified_in_standard) &
                      , new_unittest("= for enum_open_access should assign enum value and char-expr", &
                                     assignment_op_for_enum_open_access_assigns_enum_and_char_expr) &
-                     , new_unittest("enum of the default open access specifier should be SEQUENTIAL", &
+                     , new_unittest("the default open access specifier should be SEQUENTIAL", &
                                     default_open_access_enum_is_sequential) &
                      , new_unittest("inquire() should return the default char-expr &
                                     &when open an unit without the access specifier", &

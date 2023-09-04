@@ -17,7 +17,7 @@ contains
                                   enum_open_sign_list_has_char_expr_specified_in_standard) &
                      , new_unittest("= for enum_open_sign should assign enum value and char-expr", &
                                     assignment_op_for_enum_open_sign_assigns_enum_and_char_expr) &
-                     , new_unittest("enum of the default open sign specifier should be PROCESSOR_DEFINED", &
+                     , new_unittest("the default open sign specifier should be PROCESSOR_DEFINED", &
                                     default_open_sign_enum_is_processor_defined) &
                      , new_unittest("inquire() should return the default char-expr &
                                     &when open an unit without the sign specifier", &

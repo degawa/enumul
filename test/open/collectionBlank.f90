@@ -17,7 +17,7 @@ contains
                                   enum_open_blank_list_has_char_expr_specified_in_standard) &
                      , new_unittest("= for enum_open_blank should assign enum value and char-expr", &
                                     assignment_op_for_enum_open_blank_assigns_enum_and_char_expr) &
-                     , new_unittest("enum of the default open blank specifier should be NULL", &
+                     , new_unittest("the default open blank specifier should be NULL", &
                                     default_open_blank_enum_is_null) &
                      , new_unittest("inquire() should return the default char-expr &
                                     &when open an unit without the blank specifier", &

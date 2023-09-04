@@ -17,7 +17,7 @@ contains
                                   enum_open_delim_list_has_char_expr_specified_in_standard) &
                      , new_unittest("= for enum_open_delim should assign enum value and char-expr", &
                                     assignment_op_for_enum_open_delim_assigns_enum_and_char_expr) &
-                     , new_unittest("enum of the default open delim specifier should be NONE", &
+                     , new_unittest("the default open delim specifier should be NONE", &
                                     default_open_delim_enum_is_none) &
                      , new_unittest("inquire() should return the default char-expr &
                                     &when open an unit without the delim specifier", &

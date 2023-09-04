@@ -17,7 +17,7 @@ contains
                                   enum_open_status_list_has_char_expr_specified_in_standard) &
                      , new_unittest("= for enum_open_status should assigns enum value and char-expr", &
                                     assignment_op_for_enum_open_status_assigns_enum_and_char_expr) &
-                     , new_unittest("enum of the default open status specifier should be UNKNOWN", &
+                     , new_unittest("the default open status specifier should be UNKNOWN", &
                                     default_open_status_enum_is_unknown) &
                      , new_unittest("optval() should return x when x is presented", &
                                     optval_returns_x_when_x_is_presented) &
