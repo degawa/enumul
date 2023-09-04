@@ -31,7 +31,15 @@ module enumul_open_round
         !! but the `inquire` statement assigns `"UNDEFINED"`
         !! to the specified variable if there is no connection or
         !! if the connection is not for formatted I/O.
+        !!
+        !! The `inquire` statement assigns `"PROCESSOR_DEFINED"`
+        !! only if the behavior of the rounding mode is different from
+        !! that of the UP, DOWN, ZERO, NEAREST, and COMPATIBLE.
         !!@endnote
+        !!@warning
+        !!Some version of gfortran compiler returns `"PROCESSOR_DEFINED"`
+        !!even if the default rounding mode follows the ieee rounding mode
+        !!@endwarning
 
     !>The enumerator for the `round` specifier
     !>and expression in the `open` statement.
@@ -96,45 +104,43 @@ contains
     !>Returns the enumerator representing the default
     !>character-expression for the `round` specifier
     !>in the `open` statement.
-    !>The default value is compiler-dependent.
-    !>
-    !>@warning
-    !>The default rounding mode was not obtained
-    !>if the rounding mode was changed before calling this procedure.
-    !>@endwarning
+    !>The default value is compiler- or environment-dependent.
     function get_open_round_default() result(default)
-        use, intrinsic :: ieee_arithmetic
+        use, intrinsic :: iso_fortran_env
         use :: enumul_open_status
         implicit none
         type(enum_open_round) :: default
             !! The enumerator for default value of `round` specifier
             !! in `open`
 
-        type(ieee_round_type) :: rounding_mode
+        integer(int32) :: unit
+        character(len=len(round)) :: default_round_expr
 
-        ! store the current rounding mode
-        call ieee_get_rounding_mode(rounding_mode)
+        open (newunit=unit, status=open_status%scratch%expr)
+        inquire (unit, round=default_round_expr)
+        close (unit)
 
-        if (rounding_mode == ieee_up) then
+        select case (default_round_expr)
+        case (open_round%up%expr)
             default = open_round%up
-            return
-        end if
 
-        if (rounding_mode == ieee_down) then
+        case (open_round%down%expr)
             default = open_round%down
-            return
-        end if
 
-        if (rounding_mode == ieee_nearest) then
-            default = open_round%nearest
-            return
-        end if
-
-        if (rounding_mode == ieee_to_zero) then
+        case (open_round%zero%expr)
             default = open_round%zero
-            return
-        end if
 
-        default = open_round%processor_defined
+        case (open_round%nearest%expr)
+            default = open_round%nearest
+
+        case (open_round%compatible%expr)
+            default = open_round%compatible
+
+        case (open_round%processor_defined%expr)
+            default = open_round%processor_defined
+
+        case default
+            default = open_round%undefined
+        end select
     end function get_open_round_default
 end module enumul_open_round
