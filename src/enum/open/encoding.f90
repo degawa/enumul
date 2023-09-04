@@ -65,11 +65,6 @@ module enumul_open_encoding
         !! The enumerators of possible expressions
         !! for the `encoding` specifier.
 
-    type(enum_open_encoding), public, parameter :: &
-        default_open_encoding = open_encoding%default
-        !! The default value of the `encoding` specifier.
-        !! It is `"DEFAULT"`.
-
     interface optval
         procedure :: optval_open_encoding
     end interface
@@ -93,13 +88,42 @@ contains
     !>Returns the enumerator representing the default
     !>character-expression for the `encoding` specifier
     !>in the `open` statement.
-    !>The default value is `"DEFAULT"`.
-    function get_open_encoding_default() result(default)
+    function get_open_encoding_default(form, access) result(default)
+        use, intrinsic :: iso_fortran_env
+        use :: enumul_open_form
+        use :: enumul_open_access
+        use :: enumul_open_status
         implicit none
+        type(enum_open_form), intent(in), optional :: form
+            !! FORM specifier determining the file format
+        type(enum_open_access), intent(in), optional :: access
+            !! ACCESS specifier specifing the access method
         type(enum_open_encoding) :: default
             !! The enumerator for default value of `encoding` specifier
             !! in `open`
 
-        default = default_open_encoding
+        type(enum_open_form) :: form_
+        character(32) :: encoding_expr
+        integer(int32) :: unit
+
+        form_ = optval(form, get_open_form_default(access))
+
+        open (newunit=unit, status=open_status%scratch%expr, form=form_%expr)
+        inquire (unit, encoding=encoding_expr)
+        close (unit)
+
+        select case (encoding_expr)
+        case (open_encoding%utf8%expr)
+            default = open_encoding%utf8
+
+        case (open_encoding%unknown%expr)
+            default = open_encoding%unknown
+
+        case (open_encoding%undefined%expr)
+            default = open_encoding%undefined
+
+        case default
+            default = open_encoding%undefined
+        end select
     end function get_open_encoding_default
 end module enumul_open_encoding
