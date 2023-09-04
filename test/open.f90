@@ -10,6 +10,8 @@ program test_open
     use :: test_open_collection_position
     use :: test_open_collection_sign
     use :: test_open_collection_status
+    use :: test_open_collection_encoding
+    use :: test_open_collection_round
     use :: testdrive, only:new_testsuite, testsuite_type
     use :: testdrive_util, only:run_test
     implicit none
@@ -27,6 +29,8 @@ program test_open
                   , new_testsuite("open/pad", collect_open_pad) &
                   , new_testsuite("open/position", collect_open_position) &
                   , new_testsuite("open/sign", collect_open_sign) &
+                  , new_testsuite("open/encoding", collect_open_encoding) &
+                  , new_testsuite("open/round", collect_open_round) &
                   ]
     call run_test(test_suites)
 end program test_open
