@@ -1,6 +1,61 @@
+module fassert_open_action
+    use :: fassert_kit
+    use :: enumul_open_action
+    implicit none
+    private
+    public :: is_equal_enum_open_action
+    public :: output_on_failure_enum_open_action_to_str
+
+    character(*), parameter :: fmt = '('//fmt_indent//',A,A)'
+    character(*), parameter :: type_mismatch_expected = "Type mismatch: `expected` is not enum_open_action"
+    character(*), parameter :: type_mismatch_actual = "Type mismatch: `actual` is not enum_open_action"
+
+contains
+    pure logical function is_equal_enum_open_action(actual, expected)
+        implicit none
+        class(*), intent(in) :: actual
+        class(*), intent(in) :: expected
+
+        is_equal_enum_open_action = .false.
+        select type (actual); type is (enum_open_action)
+            select type (expected); type is (enum_open_action)
+
+                is_equal_enum_open_action = &
+                    all([actual%enum == expected%enum, &
+                         actual%expr == expected%expr])
+
+            end select
+        end select
+    end function is_equal_enum_open_action
+
+    pure subroutine output_on_failure_enum_open_action_to_str(actual, expected, output_message)
+        implicit none
+        class(*), intent(in) :: actual
+        class(*), intent(in) :: expected
+        character(:), allocatable, intent(inout) :: output_message
+        character(64) :: buffer
+
+        select type (actual); type is (enum_open_action)
+            select type (expected); type is (enum_open_action)
+
+                write (buffer, fmt) "Expected: ", expected%expr
+                call append(output_message, trim(buffer))
+                write (buffer, fmt) "Actual  : ", actual%expr
+                call append(output_message, trim(buffer))
+
+            class default
+                call append(output_message, type_mismatch_expected)
+            end select
+        class default
+            call append(output_message, type_mismatch_actual)
+        end select
+    end subroutine output_on_failure_enum_open_action_to_str
+end module fassert_open_action
+
 module test_open_unitTests_action
     use, intrinsic :: iso_fortran_env
     use :: fassert
+    use :: fassert_open_action
     use :: testdrive, only:error_type, check
     use :: testdrive_util, only:occurred
     use :: enumul_open_action
@@ -51,17 +106,15 @@ contains
 
         logical :: stat
         character(:), allocatable :: msg
-        type(enum_open_action) :: access
+        type(enum_open_action) :: action
 
-        access = open_action%readwrite
+        action = open_action%readwrite
 
-        call expect_equal(access%enum, open_action%readwrite%enum, &
-                          "assigned enum should have the same enum value of the rhs", stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(access%expr), trim(open_action%readwrite%expr), &
-                          "assigned enum should have the same char-expr of the rhs", stat=stat, output_message=msg)
+        call expect_equal(action, open_action%readwrite, &
+                          "assigned enum should equal to rhs", &
+                          comparator=is_equal_enum_open_action, &
+                          verbose_message_writer=output_on_failure_enum_open_action_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine assignment_op_for_enum_open_action_assigns_enum_and_char_expr
@@ -77,20 +130,11 @@ contains
 
         default = get_open_action_default()
 
-        call expect_true(any([default%enum == open_action%read%enum, &
-                              default%enum == open_action%write%enum, &
-                              default%enum == open_action%readwrite%enum]), &
-                         "enum of return value of `get_open_action_default` should be &
-                         &one of the enum having expr in the Fortran standard", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(any([default%expr == open_action%read%expr, &
-                              default%expr == open_action%write%expr, &
-                              default%expr == open_action%readwrite%expr]), &
-                         "character expression of return value of `get_open_action_default` &
-                         &should be one of the enum having expr in the Fortran standard", &
+        call expect_true(any([is_equal_enum_open_action(default, open_action%read), &
+                              is_equal_enum_open_action(default, open_action%write), &
+                              is_equal_enum_open_action(default, open_action%readwrite)]), &
+                         "`get_open_action_default` should retrun &
+                         &one of the enum for those specified in the Fortran standard", &
                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
@@ -154,14 +198,10 @@ contains
         x = open_action%write
         y = optval(x, default=get_open_action_default())
 
-        call expect_equal(y%enum, x%enum, &
-                          "enum of y should equal to that of x", &
-                          stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(y%expr), trim(x%expr), &
-                          "character expression of y should equal to that of x", &
+        call expect_equal(y, x, &
+                          "y should equal to x", &
+                          comparator=is_equal_enum_open_action, &
+                          verbose_message_writer=output_on_failure_enum_open_action_to_str, &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
@@ -180,14 +220,10 @@ contains
         default = get_open_action_default()
         y = optval(default=default)
 
-        call expect_equal(y%enum, default%enum, &
-                          "enum of y should equal to that of default", &
-                          stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(y%expr), trim(default%expr), &
-                          "character expression of y should equal to that of default", &
+        call expect_equal(y, default, &
+                          "y should equal to default", &
+                          comparator=is_equal_enum_open_action, &
+                          verbose_message_writer=output_on_failure_enum_open_action_to_str, &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return

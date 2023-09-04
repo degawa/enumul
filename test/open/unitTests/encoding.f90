@@ -1,6 +1,61 @@
+module fassert_open_encoding
+    use :: fassert_kit
+    use :: enumul_open_encoding
+    implicit none
+    private
+    public :: is_equal_enum_open_encoding
+    public :: output_on_failure_enum_open_encoding_to_str
+
+    character(*), parameter :: fmt = '('//fmt_indent//',A,A)'
+    character(*), parameter :: type_mismatch_expected = "Type mismatch: `expected` is not enum_open_encoding"
+    character(*), parameter :: type_mismatch_actual = "Type mismatch: `actual` is not enum_open_encoding"
+
+contains
+    pure logical function is_equal_enum_open_encoding(actual, expected)
+        implicit none
+        class(*), intent(in) :: actual
+        class(*), intent(in) :: expected
+
+        is_equal_enum_open_encoding = .false.
+        select type (actual); type is (enum_open_encoding)
+            select type (expected); type is (enum_open_encoding)
+
+                is_equal_enum_open_encoding = &
+                    all([actual%enum == expected%enum, &
+                         actual%expr == expected%expr])
+
+            end select
+        end select
+    end function is_equal_enum_open_encoding
+
+    pure subroutine output_on_failure_enum_open_encoding_to_str(actual, expected, output_message)
+        implicit none
+        class(*), intent(in) :: actual
+        class(*), intent(in) :: expected
+        character(:), allocatable, intent(inout) :: output_message
+        character(64) :: buffer
+
+        select type (actual); type is (enum_open_encoding)
+            select type (expected); type is (enum_open_encoding)
+
+                write (buffer, fmt) "Expected: ", expected%expr
+                call append(output_message, trim(buffer))
+                write (buffer, fmt) "Actual  : ", actual%expr
+                call append(output_message, trim(buffer))
+
+            class default
+                call append(output_message, type_mismatch_expected)
+            end select
+        class default
+            call append(output_message, type_mismatch_actual)
+        end select
+    end subroutine output_on_failure_enum_open_encoding_to_str
+end module fassert_open_encoding
+
 module test_open_unitTests_encoding
     use, intrinsic :: iso_fortran_env
     use :: fassert
+    use :: fassert_open_encoding
     use :: testdrive, only:error_type, check, skip_test
     use :: testdrive_util, only:occurred
     use :: enumul_open_encoding
@@ -54,19 +109,15 @@ contains
 
         logical :: stat
         character(:), allocatable :: msg
-        type(enum_open_encoding) :: access
+        type(enum_open_encoding) :: encoding
 
-        access = open_encoding%utf8
+        encoding = open_encoding%utf8
 
-        call expect_equal(access%enum, open_encoding%utf8%enum, &
-                          "assigned enum should have the same enum value of the rhs", stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(access%expr), trim(open_encoding%utf8%expr), &
-                          "assigned enum should have the same char-expr of the rhs", stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
+        call expect_equal(encoding, open_encoding%utf8, &
+                          "assigned enum should equal to rhs", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
     end subroutine assignment_op_for_enum_open_encoding_assigns_enum_and_char_expr
 
     subroutine open_encoding_default_returns_one_of_enum_defined_in_std(error)
@@ -79,21 +130,11 @@ contains
         type(enum_open_encoding) :: default
 
         default = get_open_encoding_default()
-
-        call expect_true(any([default%enum == open_encoding%utf8%enum, &
-                              default%enum == open_encoding%unknown%enum, &
-                              default%enum == open_encoding%undefined%enum]), &
-                         "enum of return value of `get_open_encoding_default` should be &
-                         &one of the enum having expr in the Fortran standard", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(any([default%expr == open_encoding%utf8%expr, &
-                              default%expr == open_encoding%unknown%expr, &
-                              default%expr == open_encoding%undefined%expr]), &
-                         "character expression of return value of `get_open_action_default` &
-                         &should be one of the enum having expr in the Fortran standard", &
+        call expect_true(any([is_equal_enum_open_encoding(default, open_encoding%utf8), &
+                              is_equal_enum_open_encoding(default, open_encoding%unknown), &
+                              is_equal_enum_open_encoding(default, open_encoding%undefined)]), &
+                             "`get_open_encoding_default` should retrun &
+                             &one of the enum for those specified in the Fortran standard", &
                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
@@ -113,51 +154,33 @@ contains
         ! unformatted
         default = get_open_encoding_default(form=open_form%unformatted)
 
-        call expect_equal(default%enum, open_encoding%undefined%enum, &
-                         "enum of return value of `get_open_encoding_default` for `UNFORMATTED` &
-                         &should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(default%expr == open_encoding%undefined%expr, &
-                         "character expression of return value of `get_open_action_default` &
-                         &for `UNFORMATTED` should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(default, open_encoding%undefined, &
+                          "`get_open_encoding_default` for `UNFORMATTED` should return the `UNDEFINED`", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
         ! direct access
         default = get_open_encoding_default(access=open_access%direct)
 
-        call expect_equal(default%enum, open_encoding%undefined%enum, &
-                         "enum of return value of `get_open_encoding_default` for `DIRECT` access &
-                         &should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(default%expr == open_encoding%undefined%expr, &
-                         "character expression of return value of `get_open_action_default` &
-                         &for `DIRECT` access should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(default, open_encoding%undefined, &
+                          "`get_open_encoding_default` for `DIRECT` access should return the `UNDEFINED`", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
         ! stream access
         default = get_open_encoding_default(access=open_access%stream)
 
-        call expect_equal(default%enum, open_encoding%undefined%enum, &
-                         "enum of return value of `get_open_encoding_default` for `STREAM` access &
-                         &should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(default%expr == open_encoding%undefined%expr, &
-                         "character expression of return value of `get_open_action_default` &
-                         &for `STREAM` access should be that of the `UNDEFINED`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(default, open_encoding%undefined, &
+                          "`get_open_encoding_default` for `STREAM` access should return the `UNDEFINED`", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine open_encoding_default_returns_UNDEFINED_for_unformatted
@@ -176,34 +199,22 @@ contains
         ! unformatted
         default = get_open_encoding_default(form=open_form%formatted)
 
-        call expect_equal(default%enum, open_encoding%unknown%enum, &
-                         "enum of return value of `get_open_encoding_default` for `FORMATTED` &
-                         &should be that of the `UNKNOWN`", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(default%expr == open_encoding%unknown%expr, &
-                         "character expression of return value of `get_open_action_default` &
-                         &for `FORMATTED` should be that of the `UNKNOWN`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(default, open_encoding%unknown, &
+                          "`get_open_encoding_default` for `FORMATTED` should return the `UNKNOWN`", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
         ! sequential access
         default = get_open_encoding_default(access=open_access%sequential)
 
-        call expect_equal(default%enum, open_encoding%unknown%enum, &
-                         "enum of return value of `get_open_encoding_default` for `DIRECT` access &
-                         &should be that of the `UNKNOWN`", &
-                         stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_true(default%expr == open_encoding%unknown%expr, &
-                         "character expression of return value of `get_open_action_default` &
-                         &for `SEQUENTIAL` access should be that of the `UNKNOWN`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(default, open_encoding%unknown, &
+                          "`get_open_encoding_default` for `SEQUENTIAL` access should return the `UNKNOWN`", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine open_encoding_default_returns_UNKNOWN_for_formatted
@@ -299,14 +310,10 @@ contains
         x = open_encoding%utf8
         y = optval(x, default=get_open_encoding_default())
 
-        call expect_equal(y%enum, x%enum, &
-                          "enum of y should equal to that of x", &
-                          stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(y%expr), trim(x%expr), &
-                          "character expression of y should equal to that of x", &
+        call expect_equal(y, x, &
+                          "y should equal to x", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
@@ -325,16 +332,11 @@ contains
         default = get_open_encoding_default()
         y = optval(default=default)
 
-        call expect_equal(y%enum, default%enum, &
-                          "enum of y should equal to that of default", &
+        call expect_equal(y, default, &
+                          "y should equal to default", &
+                          comparator=is_equal_enum_open_encoding, &
+                          verbose_message_writer=output_on_failure_enum_open_encoding_to_str, &
                           stat=stat, output_message=msg)
-        call check(error, stat, msg)
-        if (occurred(error)) return
-
-        call expect_equal(trim(y%expr), trim(default%expr), &
-                          "character expression of y should equal to that of default", &
-                          stat=stat, output_message=msg)
-        call check(error, stat, msg)
         if (occurred(error)) return
     end subroutine optval_returns_default_when_x_is_not_presented
 end module test_open_unitTests_encoding
