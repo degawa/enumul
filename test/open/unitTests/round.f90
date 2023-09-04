@@ -97,7 +97,7 @@ contains
                               , default%enum == open_round%zero%enum &
                               , default%enum == open_round%nearest%enum &
                               , default%enum == open_round%compatible%enum &
-#if defined(__GFORTRAN__)
+#if defined(__GFORTRAN__) || defined(NAGFOR)
                               , default%enum == open_round%processor_defined%enum &
 #endif
                               ]), &
@@ -112,7 +112,7 @@ contains
                               , default%expr == open_round%zero%expr &
                               , default%expr == open_round%nearest%expr &
                               , default%expr == open_round%compatible%expr &
-#if defined(__GFORTRAN__)
+#if defined(__GFORTRAN__) || defined(NAGFOR)
                               , default%expr == open_round%processor_defined%expr &
 #endif
                               ]), &
