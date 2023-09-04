@@ -8,7 +8,8 @@ module test_open_unitTests_form
     private
     public :: enum_open_form_list_has_char_expr_specified_in_standard
     public :: assignment_op_for_enum_open_form_assigns_enum_and_char_expr
-    public :: default_open_form_enum_is_formatted
+    public :: open_form_default_returns_unformatted_for_direct_or_stream
+    public :: open_form_default_returns_formatted_for_sequential_or_default
     public :: inquire_returns_default_char_expr_when_open_unit_wo_form_spec
     public :: inquire_returns_undefined_when_there_is_no_connection
     public :: optval_returns_x_when_x_is_presented
@@ -61,42 +62,89 @@ contains
         if (occurred(error)) return
     end subroutine assignment_op_for_enum_open_form_assigns_enum_and_char_expr
 
-    subroutine default_open_form_enum_is_formatted(error)
+    subroutine open_form_default_returns_unformatted_for_direct_or_stream(error)
+        use :: enumul_open_access
         implicit none
         type(error_type), allocatable, intent(out) :: error
             !! error handler
 
         logical :: stat
         character(:), allocatable :: msg
+
         type(enum_open_form) :: default
 
-        call expect_equal(default_open_form%enum, open_form%formatted%enum, &
-                          "enum of default form specifier shoud equal to that of the formatted", &
+        default = get_open_form_default(open_access%direct)
+        call expect_equal(default%enum, open_form%unformatted%enum, &
+                          "enum of return value of `get_open_form_default(direct)` should be &
+                          &that of the `UNFORMATTED`", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(default_open_form%expr), trim(open_form%formatted%expr), &
-                          "character expression of the default form specifier should equal to that of the unformatted", &
+        call expect_equal(trim(default%expr), trim(open_form%unformatted%expr), &
+                          "character expression of return value of `get_open_form_default(direct)` should be &
+                          &that of the `UNFORMATTED`", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
+
+        default = get_open_form_default(open_access%stream)
+        call expect_equal(default%enum, open_form%unformatted%enum, &
+                          "enum of return value of `get_open_form_default(stream)` should be &
+                          &that of the `UNFORMATTED`", &
+                          stat=stat, output_message=msg)
+        call check(error, stat, msg)
+        if (occurred(error)) return
+
+        call expect_equal(trim(default%expr), trim(open_form%unformatted%expr), &
+                          "character expression of return value of `get_open_form_default(stream)` should be &
+                          &that of the `UNFORMATTED`", &
+                          stat=stat, output_message=msg)
+        call check(error, stat, msg)
+        if (occurred(error)) return
+    end subroutine open_form_default_returns_unformatted_for_direct_or_stream
+
+    subroutine open_form_default_returns_formatted_for_sequential_or_default(error)
+        use :: enumul_open_access
+        implicit none
+        type(error_type), allocatable, intent(out) :: error
+            !! error handler
+
+        logical :: stat
+        character(:), allocatable :: msg
+
+        type(enum_open_form) :: default
 
         default = get_open_form_default()
-
-        call expect_equal(default%enum, default_open_form%enum, &
-                          "enum of return value of `get_open_form_default` should equal to that of `default_open_form`", &
+        call expect_equal(default%enum, open_form%formatted%enum, &
+                          "enum of return value of `get_open_form_default()` should be &
+                          &that of the `FORMATTED`", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(default%expr), trim(default_open_form%expr), &
-                         "character expression of return value of `get_open_form_default` &
-                         &should equal to that of `default_open_form`", &
-                         stat=stat, output_message=msg)
+        call expect_equal(trim(default%expr), trim(open_form%formatted%expr), &
+                          "character expression of return value of `get_open_form_default()` should be &
+                          &that of the `FORMATTED`", &
+                          stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
-    end subroutine default_open_form_enum_is_formatted
+
+        default = get_open_form_default(open_access%sequential)
+        call expect_equal(default%enum, open_form%formatted%enum, &
+                          "enum of return value of `get_open_form_default(sequential)` should be &
+                          &that of the `UNFORMATTED`", &
+                          stat=stat, output_message=msg)
+        call check(error, stat, msg)
+        if (occurred(error)) return
+
+        call expect_equal(trim(default%expr), trim(open_form%formatted%expr), &
+                          "character expression of return value of `get_open_form_default(sequential)` should be &
+                          &that of the `UNFORMATTED`", &
+                          stat=stat, output_message=msg)
+        call check(error, stat, msg)
+        if (occurred(error)) return
+    end subroutine open_form_default_returns_formatted_for_sequential_or_default
 
     subroutine inquire_returns_default_char_expr_when_open_unit_wo_form_spec(error)
         use :: enumul_open_status
@@ -108,12 +156,14 @@ contains
         character(:), allocatable :: msg
         character(32) :: form
         integer(int32) :: unit
+        type(enum_open_form) :: default
 
         open (newunit=unit, status=open_status%scratch%expr)
         inquire (unit, form=form)
         close (unit)
 
-        call expect_equal(trim(form), trim(default_open_form%expr), &
+        default = get_open_form_default()
+        call expect_equal(trim(form), trim(default%expr), &
                           "`inquire` returns the default character expression when open an unit without form specifier", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
@@ -152,7 +202,7 @@ contains
         type(enum_open_form) :: x, y
 
         x = open_form%formatted
-        y = optval(x, default=default_open_form)
+        y = optval(x, default=get_open_form_default())
 
         call expect_equal(y%enum, x%enum, &
                           "enum of y should equal to that of x", &
@@ -175,17 +225,18 @@ contains
         logical :: stat
         character(:), allocatable :: msg
 
-        type(enum_open_form) :: y
+        type(enum_open_form) :: y, default
 
-        y = optval(default=default_open_form)
+        default = get_open_form_default()
+        y = optval(default=default)
 
-        call expect_equal(y%enum, default_open_form%enum, &
+        call expect_equal(y%enum, default%enum, &
                           "enum of y should equal to that of default", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
         if (occurred(error)) return
 
-        call expect_equal(trim(y%expr), trim(default_open_form%expr), &
+        call expect_equal(trim(y%expr), trim(default%expr), &
                           "character expression of y should equal to that of default", &
                           stat=stat, output_message=msg)
         call check(error, stat, msg)
