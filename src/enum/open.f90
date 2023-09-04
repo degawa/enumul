@@ -12,7 +12,7 @@ module enumul_open
     use :: enumul_open_delim, &
         only:enum_open_delim, open_delim, default_open_delim, get_open_delim_default, optval
     use :: enumul_open_encoding, &
-        only:enum_open_encoding, open_encoding, default_open_encoding, get_open_encoding_default, optval
+        only:enum_open_encoding, open_encoding, get_open_encoding_default, optval
     use :: enumul_open_form, &
         only:enum_open_form, open_form, get_open_form_default, optval
     use :: enumul_open_pad, &
@@ -65,7 +65,7 @@ module enumul_open
     public :: get_open_blank_default, default_open_blank
     public :: get_open_decimal_default, default_open_decimal
     public :: get_open_delim_default, default_open_delim
-    public :: get_open_encoding_default, default_open_encoding
+    public :: get_open_encoding_default
     public :: get_open_form_default
     public :: get_open_pad_default, default_open_pad
     public :: get_open_position_default, default_open_position
