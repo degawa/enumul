@@ -121,5 +121,11 @@ case (logging_levels%critical%enum)
 end select
 ```
 
+## examples
+- typed enumerators for specifiers in open and close statement
+    - Extended the abstract data type `enum_atype` to add a component `expr` containing the character expression of a specifier in the open statement.
+    - Added a list of possible values for each enumerator as a parameter.
+    - Added a procedure that returns the default value of each specifier as the enumerator.
+
 ## Todo
 - To simplify typed enumerator definitions and declarations.
