@@ -123,9 +123,27 @@ end select
 
 ## examples
 - typed enumerators for specifiers in open and close statement
-    - Extended the abstract data type `enum_atype` to add a component `expr` containing the character expression of a specifier in the open statement.
-    - Added a list of possible values for each enumerator as a parameter.
-    - Added a procedure that returns the default value of each specifier as the enumerator.
+    - Extended the abstract data type `enum_atype` to add a component `expr` containing the character expression of a specifier in the `open` and `close` statement.
+    - Added a list of possible values for each enumerator as a parameter named `{open|close}_<specifier-name>`.
+    - Added a procedure `get_{open|close}_<specifier-name>_default` that returns the default value of each specifier as the enumerator.
+
+```Fortran
+program ex_openclose
+    use, intrinsic :: iso_fortran_env
+    use :: enumul_open
+    use :: enumul_close
+    implicit none
+
+    integer(int32) :: unit
+    open (newunit=unit, &
+          action =open_action%write%expr, &
+          form   =open_form%formatted%expr, &
+          decimal=open_decimal%comma%expr, &
+          status =open_status%scratch%expr)
+
+    close (unit, status=close_status%delete%expr)
+end program ex_openclose
+```
 
 ## Todo
 - To simplify typed enumerator definitions and declarations.
