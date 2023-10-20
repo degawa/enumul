@@ -32,6 +32,7 @@ module enumul_open_pad
             !! Open to public to pass the `open` statement.
     end type enum_open_pad
 
+    !>The possible expressions for the `pad` specifier
     type :: enum_open_pad_list
         type(enum_open_pad), public :: undefined
             !! The enumerator to represent the `UNDEFINED`
