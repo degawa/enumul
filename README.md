@@ -122,7 +122,7 @@ end select
 ```
 
 ## examples
-- typed enumerators for specifiers in open and close statement
+- typed enumerators for specifiers in `open` and `close` statement
     - Extended the abstract data type `enum_atype` to add a component `expr` containing the character expression of a specifier in the `open` and `close` statement.
     - Added a list of possible values for each enumerator as a parameter named `{open|close}_<specifier-name>`.
     - Added a procedure `get_{open|close}_<specifier-name>_default` that returns the default value of each specifier as the enumerator.
@@ -142,6 +142,32 @@ program ex_openclose
           status =open_status%scratch%expr)
 
     close (unit, status=close_status%delete%expr)
+end program ex_openclose
+```
+
+- typed enumerators for specifiers in `read` and `write` statement
+    - Extended the abstract data type `enum_atype` to add a component `expr` containing the character expression of a specifier in the `read` and `write` statement.
+        - added a type-bound procedure `trim` to remove trailing whitespace.
+    - Added a list of possible values for each enumerator as a parameter named `{read|write}_<specifier-name>`.
+
+```Fortran
+program ex_openclose
+    use, intrinsic :: iso_fortran_env
+    use :: enumul_open
+    use :: enumul_close
+    use :: enumul_write
+    use :: enumul_read
+    implicit none
+
+    integer(int32) :: unit
+    open (newunit=unit, file="sequential.tmp", &
+          form=open_form%formatted%expr, &
+          action=open_action%write%expr, &
+          status=open_status%replace%expr)
+    write (unit, '(A)', advance=write_advance%no%trim()) "🚀"
+    write (unit, '(A)', advance=write_advance%yes%trim()) "🌏"
+    close (unit, status=close_status%keep%expr)
+    ! 🚀🌏 is written in sequential.tmp
 end program ex_openclose
 ```
 
